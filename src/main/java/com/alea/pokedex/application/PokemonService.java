@@ -1,10 +1,11 @@
 package com.alea.pokedex.application;
 
+import static java.util.Comparator.comparingInt;
+
 import com.alea.pokedex.domain.Pokemon;
 import com.alea.pokedex.domain.PokemonRepository;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,27 +16,28 @@ public class PokemonService {
         this.pokemonRepository = pokemonRepository;
     }
 
-    public List<Pokemon> getHeaviestPokemons() {
-        return pokemonRepository.getAllPokemons()
-            .stream()
-            .sorted(Comparator.comparingInt(Pokemon::weight).reversed())
-            .limit(5)
-            .collect(Collectors.toList());
-    }
+    public List<Pokemon> getPokemonsBy(PokemonCriteria criteria) {
+        var pokemons = new ArrayList<>(pokemonRepository.getAllPokemons());
+        if (criteria.hasFilter()) {
+            switch (criteria.filter()) {
+                case HEAVIEST:
+                    pokemons.sort(comparingInt(Pokemon::weight).reversed());
+                    break;
+                case TALLEST:
+                    pokemons.sort(comparingInt(Pokemon::height).reversed());
+                    break;
+                case EXPERIENCE:
+                    pokemons.sort(comparingInt(Pokemon::baseExperience).reversed());
+                    break;
+            }
+        }
 
-    public List<Pokemon> getTallestPokemons() {
-        return pokemonRepository.getAllPokemons()
-            .stream()
-            .sorted(Comparator.comparingInt(Pokemon::height).reversed())
-            .limit(5)
-            .collect(Collectors.toList());
-    }
+        if (criteria.hasLimit()) {
+            return pokemons.stream()
+                .limit(criteria.limit())
+                .toList();
+        }
 
-    public List<Pokemon> getMostExperiencedPokemons() {
-        return pokemonRepository.getAllPokemons()
-            .stream()
-            .sorted(Comparator.comparingInt(Pokemon::baseExperience).reversed())
-            .limit(5)
-            .collect(Collectors.toList());
+        return pokemons;
     }
 }

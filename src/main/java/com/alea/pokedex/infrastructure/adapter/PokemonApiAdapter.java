@@ -4,7 +4,6 @@ import com.alea.pokedex.domain.Pokemon;
 import com.alea.pokedex.domain.PokemonRepository;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -19,8 +18,9 @@ public class PokemonApiAdapter implements PokemonRepository {
     @Override
     @Cacheable("pokemons")
     public List<Pokemon> getAllPokemons() {
-        String url = "https://pokeapi.co/api/v2/pokemon?limit=150";
-        var response = restTemplate.getForObject(url, PokemonApiResponse.class);
+        // The API doesn't support sorting so we need to fetch all pokemons and sort them in memory.
+        // Keeping the limit to 150 for now.
+        var response = restTemplate.getForObject("/api/v2/pokemon?limit=150", PokemonApiResponse.class);
         Objects.requireNonNull(response);
         return response.results().stream()
             .map(this::fetchPokemonDetails)

@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Pokedex-alea
+pokemon:
+  api:
+    url: https://pokeapi.co
