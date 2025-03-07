@@ -4,3 +4,4 @@ spring:
 pokemon:
   api:
     url: https://pokeapi.co
+    limit: 150

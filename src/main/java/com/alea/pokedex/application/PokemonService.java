@@ -18,8 +18,8 @@ public class PokemonService {
 
     public List<Pokemon> getPokemonsBy(PokemonCriteria criteria) {
         var pokemons = new ArrayList<>(pokemonRepository.getAllPokemons());
-        if (criteria.hasFilter()) {
-            switch (criteria.filter()) {
+        if (criteria.hasSortBy()) {
+            switch (criteria.sortBy()) {
                 case HEAVIEST:
                     pokemons.sort(comparingInt(Pokemon::weight).reversed());
                     break;

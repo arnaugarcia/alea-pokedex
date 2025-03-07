@@ -1,15 +1,12 @@
 package com.alea.pokedex.application;
 
-import com.alea.pokedex.infrastructure.controller.PokemonRequestCriteria;
+import org.springframework.util.StringUtils;
 
-public record PokemonCriteria(Integer limit, PokemonFilter filter) {
+public record PokemonCriteria(Integer limit, PokemonFilter sortBy) {
 
     public PokemonCriteria {
         if (limit != null && limit <= 0) {
             throw new IllegalArgumentException("limit must be greater than 0");
-        }
-        if (filter != null && filter.equals(PokemonFilter.EXPERIENCE)) {
-            throw new IllegalArgumentException("filter must not be experience");
         }
     }
 
@@ -17,11 +14,15 @@ public record PokemonCriteria(Integer limit, PokemonFilter filter) {
         return limit != null;
     }
 
-    public boolean hasFilter() {
-        return filter != null;
+    public boolean hasSortBy() {
+        return sortBy != null;
     }
 
-    public static PokemonCriteria fromRequestCriteria(PokemonRequestCriteria requestCriteria) {
-        return new PokemonCriteria(requestCriteria.limit(), PokemonFilter.valueOf(requestCriteria.filter()));
+    public static PokemonCriteria of(Integer limit, String sortBy) {
+        if (StringUtils.hasText(sortBy)) {
+            var filter = PokemonFilter.valueOf(sortBy.toUpperCase());
+            return new PokemonCriteria(limit, filter);
+        }
+        return new PokemonCriteria(limit, null);
     }
 }
