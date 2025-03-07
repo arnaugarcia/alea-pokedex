@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PokemonFilter {
-    HEAVIEST("heaviest"),
-    TALLEST("tallest"),
+    WEIGHT("weight"),
+    HEIGHT("height"),
     EXPERIENCE("experience");
     private final String value;
 }

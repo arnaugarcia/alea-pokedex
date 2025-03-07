@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: Pokedex-alea
+pokemon:
+  api:
+    url: https://pokeapi.co
+    limit: 150
+springdoc:
+  api-docs:
+    enabled: false

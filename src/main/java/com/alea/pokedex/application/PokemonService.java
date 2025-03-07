@@ -20,10 +20,10 @@ public class PokemonService {
         var pokemons = new ArrayList<>(pokemonRepository.getAllPokemons());
         if (criteria.hasSortBy()) {
             switch (criteria.sortBy()) {
-                case HEAVIEST:
+                case WEIGHT:
                     pokemons.sort(comparingInt(Pokemon::weight).reversed());
                     break;
-                case TALLEST:
+                case HEIGHT:
                     pokemons.sort(comparingInt(Pokemon::height).reversed());
                     break;
                 case EXPERIENCE:
